@@ -10,7 +10,10 @@ export default function App() {
   }
 
   const addMessageHandler = () => {
-    setListMessages(currentMessages => [...currentMessages, enteredMessage]);
+    setListMessages(currentMessages => [
+      ...currentMessages, 
+      { key: Math.random().toString(), value: enteredMessage }
+    ]);
   }
 
   const resetMessageHandler = () => {
@@ -27,13 +30,15 @@ export default function App() {
       <View style={styles.inputContainer}>
         <Button title="Reset" onPress={resetMessageHandler} />
       </View>
-      <ScrollView style={styles.viewContent}>
-        {listMessages.map(message => (
-          <View key={Math.random().toString()} style={styles.listText}>
-            <Text>{message}</Text>
+      <FlatList 
+        style={styles.viewContent}
+        data = {listMessages}
+        renderItem = {itemData => (
+          <View style={styles.listText}>
+            <Text>{itemData.item.value}</Text>
           </View>
-        ))}
-      </ScrollView>
+        )}
+      />
     </View>
   );
 }
