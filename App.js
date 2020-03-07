@@ -9,6 +9,9 @@ export default function App() {
   const [isAddMode, setIsAddMode] = useState(false);
 
   const addMessageHandler = messageTitle => {
+    if(messageTitle.length == 0){
+      return;
+    }
     setListMessages(currentMessages => [
       ...currentMessages,
       { id: Math.random().toString(), value: messageTitle }
