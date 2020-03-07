@@ -6,22 +6,41 @@ import ListText from './components/ListText';
 
 export default function App() {
   const [listMessages, setListMessages] = useState([]);
+  const [isAddMode, setIsAddMode] = useState(false);
 
   const addMessageHandler = messageTitle => {
     setListMessages(currentMessages => [
       ...currentMessages,
       { id: Math.random().toString(), value: messageTitle }
     ]);
+    setIsAddMode(false);
+  };
+
+  const removeMessageHandler = messageID => {
+    setListMessages(currentMessages => {
+      return currentMessages.filter((message) => message.id !== messageID);
+    });
+  }
+
+  const resetMessageAdditionHandler = () => {
+    setIsAddMode(false);
   };
 
   return (
     <View style={styles.container}>
-      <MessageInput onAddMessage={addMessageHandler} />
+      <Button title="Add new message" onPress={() => setIsAddMode(true)} />
+      <MessageInput visible={isAddMode} onAddMessage={addMessageHandler} onReset={resetMessageAdditionHandler} />
       <FlatList
         style={styles.viewContent}
         keyExtractor={(item, index) => item.id}
         data={listMessages}
-        renderItem={itemData => <ListText title={itemData.item.value} />}
+        renderItem={itemData => (
+          <ListText 
+            id={itemData.item.id} 
+            onDelete={removeMessageHandler} 
+            title={itemData.item.value} 
+          />
+        )}
       />
     </View>
   );

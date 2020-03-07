@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Modal } from 'react-native';
 
 const MessageInput = props => {
     const [enteredMessage, setEnteredMessage] = useState('');
@@ -7,24 +7,34 @@ const MessageInput = props => {
     const messageInputHandler = enteredText => {
         setEnteredMessage(enteredText);
     };
+
+    const addMessageHandler = () => {
+        props.onAddMessage(enteredMessage);
+        setEnteredMessage('');
+    };
     
     return (
-        <View style={styles.inputContainer}>
-            <TextInput 
-                placeholder="Enter the message here..."
-                value={enteredMessage}
-                onChangeText={messageInputHandler}
-                style={styles.input}
-            />
-            <Button title="ADD" onPress={props.onAddMessage.bind(this, enteredMessage)} />
-        </View>
+        <Modal visible={props.visible} animationType="fade">
+            <View style={styles.inputContainer}>
+                <TextInput 
+                    placeholder="Enter the message here..."
+                    value={enteredMessage}
+                    onChangeText={messageInputHandler}
+                    style={styles.input}
+                />
+                <View style={styles.buttonContainer}>
+                    <Button title="ADD" onPress={addMessageHandler} />
+                    <Button title="RESET" color="red" onPress={props.onReset} />
+                </View>
+            </View>
+        </Modal>
     );
 };
 
 const styles = StyleSheet.create({
     inputContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        flex: 1,
+        justifyContent: 'center',
         alignItems: 'center',
     },
     input: {
@@ -32,6 +42,11 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         borderWidth: 1,
         padding: 10,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        width: '60%'
     },
 });
 
